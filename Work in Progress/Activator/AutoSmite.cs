@@ -16,8 +16,8 @@ namespace Activator
         {
             Game.OnGameUpdate += Game_OnGameUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
-            if (Player.BaseSkinName == "Nunu") { Special = new Spell(SpellSlot.Q, 125f); }
-            if (Player.BaseSkinName == "Olaf") { Special = new Spell(SpellSlot.E, 125f); }
+            if (Player.BaseSkinName == "Nunu") { Special = new Spell(SpellSlot.Q, 200f); }
+            if (Player.BaseSkinName == "Olaf") { Special = new Spell(SpellSlot.E, 200f); }
             if (Player.BaseSkinName == "ChoGath") { Special = new Spell(SpellSlot.R, 175f); }
             SmiteSlot = Player.GetSpellSlot("SummonerSmite");
         }
