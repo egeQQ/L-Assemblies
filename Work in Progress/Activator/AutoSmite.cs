@@ -10,6 +10,7 @@ namespace Activator
     public static class AutoSmite
     {
         private static SpellSlot SmiteSlot;
+        private static Spell Special;
         private static Obj_AI_Hero Player = ObjectManager.Player;
         static AutoSmite()
         {
@@ -26,8 +27,13 @@ namespace Activator
             smiteMenu.AddItem(new MenuItem("AutoSmiteEnabled", "Enabled").SetValue(true));
             smiteMenu.AddItem(new MenuItem("EnableSmallCamps", "Smite small Camps").SetValue(true));
             smiteMenu.AddItem(new MenuItem("AutoSmiteDrawing", "Enable Drawing").SetValue(true));
-
+            if (Player.BaseSkinName == "Olaf") { smiteMenu.AddItem(new MenuItem("OlafE", "Use Olaf E").SetValue(true)); }
+            if (Player.BaseSkinName == "Nunu") { smiteMenu.AddItem(new MenuItem("NunuQ", "Use Nunu Q").SetValue(true)); }
+            if (Player.BaseSkinName == "ChoGath") { smiteMenu.AddItem(new MenuItem("ChoR", "Use Cho'Gath R").SetValue(true)); }
             menu.AddSubMenu(smiteMenu);
+            if (Player.BaseSkinName == "Nunu") { Special = new Spell(SpellSlot.Q, 125f); }
+            if (Player.BaseSkinName == "Olaf") { Special = new Spell(SpellSlot.E, 125f); }
+            if (Player.BaseSkinName == "ChoGath") { Special = new Spell(SpellSlot.R, 175f); }
         }
 
         //Get Monster
@@ -55,13 +61,28 @@ namespace Activator
         //Kill monster
         private static void KillMinion(Obj_AI_Base minion)
         {
+            bool check = isSpellEnabled(Player.BaseSkinName) ? Player.GetSummonerSpellDamage(minion, Damage.SummonerSpell.Smite) + Special.GetDamage(minion) > minion.Health : Player.GetSummonerSpellDamage(minion, Damage.SummonerSpell.Smite) > minion.Health;
             if (SmiteSlot != SpellSlot.Unknown && Player.SummonerSpellbook.CanUseSpell(SmiteSlot) == SpellState.Ready &&
-                Player.GetSummonerSpellDamage(minion, Damage.SummonerSpell.Smite) > minion.Health)
+                check)
             {
+                if (isSpellEnabled(Player.BaseSkinName)) { Special.Cast(minion); }
                 Player.SummonerSpellbook.CastSpell(SmiteSlot, minion);
             }
         }
-
+        public static bool isSpellEnabled(String champName)
+        {
+            switch (champName)
+            {
+                case "Nunu":
+                    return Config.Menu.Item("NunuQ").GetValue<bool>();
+                case "Olaf":
+                    return Config.Menu.Item("OlafE").GetValue<bool>();
+                case "ChoGath":
+                    return Config.Menu.Item("ChoR").GetValue<bool>();
+                default:
+                    return false;
+            }
+        }
         public static void Game_OnGameUpdate(EventArgs args)
         {
             if (!Config.Menu.Item("AutoSmiteEnabled").GetValue<bool>())
