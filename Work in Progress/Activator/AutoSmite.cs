@@ -16,8 +16,8 @@ namespace Activator
         {
             Game.OnGameUpdate += Game_OnGameUpdate;
             Drawing.OnDraw += Drawing_OnDraw;
-            if (Player.BaseSkinName == "Nunu") { Special = new Spell(SpellSlot.Q, 200f); }
-            if (Player.BaseSkinName == "Olaf") { Special = new Spell(SpellSlot.E, 200f); }
+            if (Player.BaseSkinName == "Nunu") { Special = new Spell(SpellSlot.Q, 125f); }
+            if (Player.BaseSkinName == "Olaf") { Special = new Spell(SpellSlot.E, 125f); }
             if (Player.BaseSkinName == "ChoGath") { Special = new Spell(SpellSlot.R, 175f); }
             SmiteSlot = Player.GetSpellSlot("SummonerSmite");
         }
@@ -60,7 +60,7 @@ namespace Activator
         //Kill monster
         private static void KillMinion(Obj_AI_Base minion)
         {
-            bool check = isSpellEnabled(Player.BaseSkinName) ? (Special.IsReady() && Player.Distance(minion) <= Orbwalking.GetRealAutoAttackRange(null)+Special.Range) ? (Player.GetSummonerSpellDamage(minion, Damage.SummonerSpell.Smite) + Special.GetDamage(minion) >= minion.Health) : Player.GetSummonerSpellDamage(minion, Damage.SummonerSpell.Smite) >= minion.Health : Player.GetSummonerSpellDamage(minion, Damage.SummonerSpell.Smite) >= minion.Health;
+            bool check = isSpellEnabled(Player.BaseSkinName) ? (Special.IsReady() && Player.Distance(minion) <= Special.Range) ? (Player.GetSummonerSpellDamage(minion, Damage.SummonerSpell.Smite) + Special.GetDamage(minion) >= minion.Health) : Player.GetSummonerSpellDamage(minion, Damage.SummonerSpell.Smite) >= minion.Health : Player.GetSummonerSpellDamage(minion, Damage.SummonerSpell.Smite) >= minion.Health;
             if (SmiteSlot != SpellSlot.Unknown && Player.SummonerSpellbook.CanUseSpell(SmiteSlot) == SpellState.Ready &&
                 check)
             {
